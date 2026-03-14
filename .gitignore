@@ -1,0 +1,21 @@
+# Terraform state — never commit
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars      # contains real passwords/account IDs
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+processing/.venv/
+processing/venv/
+*.egg-info/
+
+# macOS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp

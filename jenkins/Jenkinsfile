@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    environment {
+        // Set in Jenkins → Manage Jenkins → Credentials
+        EC2_IP   = credentials('ec2-public-ip')   // stored as a secret text credential
+        EC2_KEY  = credentials('ec2-ssh-key')      // stored as an SSH private key file
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/YOUR_USERNAME/satellite-image-pipeline'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    cd processing
+                    pip3 install -r requirements.txt
+                    python3 -m pytest tests/ -v --tb=short
+                '''
+            }
+            post {
+                always {
+                    // Archive test results in Jenkins UI
+                    junit allowEmptyResults: true, testResults: 'processing/test-results/*.xml'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                // Only deploy from the main branch
+                branch 'main'
+            }
+            steps {
+                sh '''
+                    # Copy updated processing code to EC2
+                    scp -i $EC2_KEY \
+                        -o StrictHostKeyChecking=no \
+                        -r processing/ \
+                        ec2-user@$EC2_IP:/app/
+
+                    # Restart the processing service with zero-downtime reload
+                    ssh -i $EC2_KEY \
+                        -o StrictHostKeyChecking=no \
+                        ec2-user@$EC2_IP \
+                        "cd /app && pip3 install -r processing/requirements.txt -q && sudo systemctl restart drone-processor"
+
+                    echo "Deploy complete. Verifying service is running..."
+                    ssh -i $EC2_KEY \
+                        -o StrictHostKeyChecking=no \
+                        ec2-user@$EC2_IP \
+                        "sudo systemctl is-active drone-processor"
+                '''
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo "Pipeline succeeded — drone-processor is running latest code."
+        }
+        failure {
+            echo "Pipeline FAILED. Check the Test or Deploy stage logs above."
+        }
+    }
+}
