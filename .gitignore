@@ -19,3 +19,6 @@ processing/venv/
 .idea/
 .vscode/
 *.swp
+
+# aws
+aws/
