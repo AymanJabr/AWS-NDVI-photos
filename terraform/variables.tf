@@ -7,7 +7,7 @@ variable "project_name" {
 variable "aws_region" {
   description = "AWS region to deploy into"
   type        = string
-  default     = "eu-west-1" # Ireland — closest to Chiavari, Italy
+  default     = "eu-west-1" # Ireland - closest to Chiavari, Italy
 }
 
 variable "availability_zones" {
@@ -37,12 +37,12 @@ variable "private_subnet_cidr_2" {
 }
 
 variable "bucket_suffix" {
-  description = "Unique suffix for S3 bucket names — use your 12-digit AWS account ID"
+  description = "Unique suffix for S3 bucket names - use your 12-digit AWS account ID"
   type        = string
 }
 
 variable "db_password" {
-  description = "Password for RDS PostgreSQL — use a strong password, minimum 8 chars"
+  description = "Password for RDS PostgreSQL - use a strong password, minimum 8 chars"
   type        = string
   sensitive   = true
 }

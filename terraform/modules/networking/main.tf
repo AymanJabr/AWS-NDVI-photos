@@ -21,7 +21,7 @@ resource "aws_subnet" "public" {
   }
 }
 
-# Two private subnets in different AZs — required for RDS subnet group
+# Two private subnets in different AZs - required for RDS subnet group
 resource "aws_subnet" "private_1" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnet_cidr_1
@@ -102,7 +102,7 @@ resource "aws_security_group" "ec2" {
 # RDS security group: only accepts connections from EC2
 resource "aws_security_group" "rds" {
   name        = "${var.project_name}-rds-sg"
-  description = "Security group for RDS — only accepts traffic from EC2"
+  description = "Security group for RDS - only accepts traffic from EC2"
   vpc_id      = aws_vpc.main.id
 
   ingress {

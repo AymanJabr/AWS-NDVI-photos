@@ -24,7 +24,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_role.name
 }
 
-# S3: read from input, write to output — scoped to specific buckets
+# S3: read from input, write to output - scoped to specific buckets
 data "aws_iam_policy_document" "s3_access" {
   statement {
     effect  = "Allow"

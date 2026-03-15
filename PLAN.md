@@ -299,6 +299,17 @@ Jenkins runs locally (or on a free EC2) with:
 
 ---
 
+Next steps to make it live:
+  1. Copy terraform/terraform.tfvars.example → terraform/terraform.tfvars and fill in your AWS account ID, key pair name, and a DB
+  password
+  2. cd terraform && terraform init && terraform apply
+  3. Push the code to GitHub (EC2 will clone it on first boot)
+  4. Run ./scripts/upload_test_image.sh to trigger a live demo
+
+
+
+----
+
 ## Tips for the Interview
 
 - **Lead with the architecture diagram.** Draw it on a whiteboard or have a diagram ready.

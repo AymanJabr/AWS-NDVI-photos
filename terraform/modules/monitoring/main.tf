@@ -21,7 +21,7 @@ resource "aws_sns_topic_subscription" "email_alert" {
   endpoint  = var.alert_email
 }
 
-# Alarm: SQS queue depth — worker may be stuck or underpowered
+# Alarm: SQS queue depth - worker may be stuck or underpowered
 resource "aws_cloudwatch_metric_alarm" "sqs_depth" {
   alarm_name          = "${var.project_name}-sqs-depth-high"
   comparison_operator = "GreaterThanThreshold"
@@ -31,7 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_depth" {
   period              = 300
   statistic           = "Average"
   threshold           = 10
-  alarm_description   = "SQS queue depth > 10 — worker may be stuck or need scaling"
+  alarm_description   = "SQS queue depth > 10 - worker may be stuck or need scaling"
 
   dimensions = {
     QueueName = var.sqs_queue_name
@@ -41,7 +41,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_depth" {
   ok_actions    = [aws_sns_topic.alerts.arn]
 }
 
-# Alarm: EC2 CPU — may indicate processing bottleneck
+# Alarm: EC2 CPU - may indicate processing bottleneck
 resource "aws_cloudwatch_metric_alarm" "ec2_cpu" {
   alarm_name          = "${var.project_name}-ec2-cpu-high"
   comparison_operator = "GreaterThanThreshold"
@@ -51,7 +51,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_cpu" {
   period              = 300
   statistic           = "Average"
   threshold           = 80
-  alarm_description   = "EC2 CPU > 80% — consider upgrading instance or adding workers"
+  alarm_description   = "EC2 CPU > 80% - consider upgrading instance or adding workers"
 
   dimensions = {
     InstanceId = var.ec2_instance_id
@@ -73,7 +73,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title = "SQS Queue Depth"
+          title  = "SQS Queue Depth"
+          region = var.aws_region
           metrics = [
             ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", var.sqs_queue_name]
           ]
@@ -89,7 +90,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title = "EC2 CPU Utilization"
+          title  = "EC2 CPU Utilization"
+          region = var.aws_region
           metrics = [
             ["AWS/EC2", "CPUUtilization", "InstanceId", var.ec2_instance_id]
           ]

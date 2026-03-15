@@ -3,6 +3,6 @@ variable "project_name" {
 }
 
 variable "bucket_suffix" {
-  description = "Suffix to make bucket names globally unique — use your AWS account ID"
+  description = "Suffix to make bucket names globally unique - use your AWS account ID"
   type        = string
 }

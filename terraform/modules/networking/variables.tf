@@ -1,5 +1,5 @@
 variable "project_name" {
-  description = "Project name — used as prefix for all resource names"
+  description = "Project name - used as prefix for all resource names"
   type        = string
 }
 
@@ -28,6 +28,6 @@ variable "private_subnet_cidr_2" {
 }
 
 variable "availability_zones" {
-  description = "List of AZs to use — needs at least 2 for the RDS subnet group"
+  description = "List of AZs to use - needs at least 2 for the RDS subnet group"
   type        = list(string)
 }

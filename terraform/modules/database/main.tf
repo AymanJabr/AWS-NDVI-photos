@@ -22,7 +22,7 @@ resource "aws_ssm_parameter" "db_password" {
 resource "aws_db_instance" "postgres" {
   identifier     = "${var.project_name}-db"
   engine         = "postgres"
-  engine_version = "15.4"
+  engine_version = "16.13"
   instance_class = "db.t3.micro"
 
   db_name  = var.db_name
@@ -44,7 +44,7 @@ resource "aws_db_instance" "postgres" {
 
   enabled_cloudwatch_logs_exports = ["postgresql"]
 
-  # Set to false in production — keeps final snapshot on destroy
+  # Set to false in production - keeps final snapshot on destroy
   skip_final_snapshot = true
 
   tags = {

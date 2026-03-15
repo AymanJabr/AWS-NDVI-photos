@@ -1,4 +1,4 @@
-# Input bucket — raw drone images land here
+# Input bucket - raw drone images land here
 resource "aws_s3_bucket" "input" {
   bucket = "${var.project_name}-input-${var.bucket_suffix}"
 
@@ -16,7 +16,7 @@ resource "aws_s3_bucket_public_access_block" "input" {
   restrict_public_buckets = true
 }
 
-# Output bucket — processed NDVI heatmaps go here
+# Output bucket - processed NDVI heatmaps go here
 resource "aws_s3_bucket" "output" {
   bucket = "${var.project_name}-output-${var.bucket_suffix}"
 
@@ -41,13 +41,15 @@ resource "aws_s3_bucket_lifecycle_configuration" "output" {
     id     = "expire-processed-images"
     status = "Enabled"
 
+    filter {} # empty filter = applies to all objects in the bucket
+
     expiration {
       days = 90
     }
   }
 }
 
-# Dead-letter queue — messages land here after 3 failed processing attempts
+# Dead-letter queue - messages land here after 3 failed processing attempts
 resource "aws_sqs_queue" "dlq" {
   name                      = "${var.project_name}-dlq"
   message_retention_seconds = 1209600 # 14 days
@@ -57,10 +59,10 @@ resource "aws_sqs_queue" "dlq" {
   }
 }
 
-# Main queue — S3 events flow in here, EC2 worker polls this
+# Main queue - S3 events flow in here, EC2 worker polls this
 resource "aws_sqs_queue" "main" {
   name                       = "${var.project_name}-queue"
-  visibility_timeout_seconds = 300 # 5 min — enough time to process a large image
+  visibility_timeout_seconds = 300 # 5 min - enough time to process a large image
   message_retention_seconds  = 86400
 
   redrive_policy = jsonencode({
